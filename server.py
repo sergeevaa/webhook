@@ -1,6 +1,4 @@
-import os
-
-from flask import Flask, request, render_template, send_from_directory, jsonify
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -11,7 +9,7 @@ def home():
 
 
 @app.route('/webhook/<int:mycode>', methods=['POST'])
-def handle_webhook_get(mycode):
+def handle_webhook_post(mycode):
     if 99 < mycode < 600:
         data = request.get_json()
         response_code = int(request.args.get('response_code', mycode))
@@ -31,5 +29,4 @@ def handle_webhook_get(mycode):
 
 
 if __name__ == '__main__':
-    app.run()
-    app.debug = True
+    app.run(debug=True)
