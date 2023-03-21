@@ -5,15 +5,15 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return f'<h3>Start</h3>'
+    return '<h3>Start</h3>'
 
 
 @app.route('/webhook/<int:mycode>', methods=['POST'])
 def handle_webhook_post(mycode):
     if 99 < mycode < 600:
-        data = request.get_json()
         response_code = int(request.args.get('response_code', mycode))
-        return jsonify({'request': request.remote_addr, 'code': response_code, 'data': str(data)}), response_code
+        response_data = {"status": "success", "message": "Webhook received."}
+        return jsonify(response_data), response_code
     else:
         return 'Response code incorrect', 500
 
@@ -21,9 +21,9 @@ def handle_webhook_post(mycode):
 @app.route('/webhook/<int:mycode>', methods=['GET'])
 def handle_webhook_get(mycode):
     if 99 < mycode < 600:
-        data = request.args.get('data')
         response_code = int(request.args.get('response_code', mycode))
-        return jsonify({'request': request.remote_addr, 'code': response_code, 'data': str(data)}), response_code
+        response_data = {"status": "success", "message": "Webhook received."}
+        return jsonify(response_data), response_code
     else:
         return 'Response code incorrect', 500
 
