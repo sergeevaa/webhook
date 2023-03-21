@@ -31,5 +31,5 @@ def handle_webhook_get(mycode):
 
 
 if __name__ == '__main__':
-    app.run(port=5001)
+    app.run()
     app.debug = True
