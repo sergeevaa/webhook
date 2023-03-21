@@ -1,23 +1,35 @@
-from flask import Flask, request
+import os
+
+from flask import Flask, request, render_template, send_from_directory, jsonify
 
 app = Flask(__name__)
 
 
-@app.route('/webhook', methods=['POST'])
-def handle_webhook():
-    data = request.get_json()
-    print(data)
-    response_code = int(request.args.get('response_code', '200'))
-    return '', response_code
+@app.route('/')
+def home():
+    return f'<h3>Start</h3>'
 
 
-@app.route('/webhook', methods=['GET'])
-def handle_webhook_get():
-    data = request.args.get('data')
-    response_code = int(request.args.get('response_code', '200'))
-    print(data)
-    return '', response_code
+@app.route('/webhook/<int:mycode>', methods=['POST'])
+def handle_webhook_get(mycode):
+    if 99 < mycode < 600:
+        data = request.get_json()
+        response_code = int(request.args.get('response_code', mycode))
+        return jsonify({'request': request.remote_addr, 'code': response_code, 'data': str(data)}), response_code
+    else:
+        return 'Response code incorrect', 500
+
+
+@app.route('/webhook/<int:mycode>', methods=['GET'])
+def handle_webhook_get(mycode):
+    if 99 < mycode < 600:
+        data = request.args.get('data')
+        response_code = int(request.args.get('response_code', mycode))
+        return jsonify({'request': request.remote_addr, 'code': response_code, 'data': str(data)}), response_code
+    else:
+        return 'Response code incorrect', 500
 
 
 if __name__ == '__main__':
-    app.run(port=443)
+    app.run(port=5001)
+    app.debug = True
